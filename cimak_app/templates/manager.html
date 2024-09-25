@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الحجوزات</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">إدارة الحجوزات</h1>
+
+        <!-- عرض الرسائل -->
+        {% if messages %}
+            <div class="alert alert-success" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>رقم السيارة</th>
+                    <th>موديل السيارة</th>
+                    <th>لون السيارة</th>
+                    <th>حالة الحجز</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.car.car_number }}</td>
+                        <td>{{ booking.car.car_model }}</td>
+                        <td>{{ booking.car.car_color }}</td>
+                        <td>{{ booking.status }}</td>
+                        <td>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#dateModal{{ booking.pk }}">موافقة</button>
+                            <a href="{% url 'reject_booking' booking.pk %}" class="btn btn-danger">رفض</a>
+                            <a href="{% url 'delete_booking_view' booking.id %}" class="btn btn-warning" onclick="return confirm('هل أنت متأكد من أنك تريد تاكيد هذا الحجز؟');">تاكيد</a>
+
+                            <!-- Modal لإدخال تاريخ القدوم -->
+                            <div class="modal fade" id="dateModal{{ booking.pk }}" tabindex="-1" role="dialog" aria-labelledby="dateModalLabel{{ booking.pk }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="dateModalLabel{{ booking.pk }}">إدخال تاريخ القدوم</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{% url 'approve_booking' booking.pk %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label for="arrival_date">تاريخ القدوم:</label>
+                                                    <input type="date" class="form-control" id="arrival_date" name="arrival_date" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">تأكيد</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">لا توجد حجوزات متاحة.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- مكتبات جافا سكريبت -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

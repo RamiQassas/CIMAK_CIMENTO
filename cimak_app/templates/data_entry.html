@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدخال البيانات</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">CIMAK-CIMENTO</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">الصفحة الرئيسية</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'data_entry' %}">إدخال البيانات <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1 class="text-center">إدخال البيانات</h1>
+
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="car_number">رقم السيارة</label>
+                <input type="text" name="car_number" class="form-control" id="car_number" placeholder="أدخل رقم السيارة" required>
+            </div>
+            <div class="form-group">
+                <label for="car_model">موديل السيارة</label>
+                <input type="text" name="car_model" class="form-control" id="car_model" placeholder="أدخل موديل السيارة" required>
+            </div>
+            <div class="form-group">
+                <label for="car_color">لون السيارة</label>
+                <input type="text" name="car_color" class="form-control" id="car_color" placeholder="أدخل لون السيارة" required>
+            </div>
+            <button type="submit" class="btn btn-primary">إدخال البيانات</button>
+            <a href="{% url 'manager' %}" class="btn btn-secondary">العودة إلى الإدارة</a>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

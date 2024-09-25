@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفحة الرئيسية</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .container {
+            margin-top: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #007bff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">CIMAK-CIMENTO</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'home' %}">الصفحة الرئيسية <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">تسجيل دخول الموظفين</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center">CIMAK-CIMENTO</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="car_number">رقم السيارة</label>
+                <input type="text" name="car_number" class="form-control" id="car_number" placeholder="أدخل رقم السيارة" required>
+            </div>
+            <button type="submit" class="btn btn-primary">استعلام</button>
+        </form>
+
+        {% if car_not_found %}
+            <div class="alert alert-warning mt-3">لا توجد معلومات عن السيارة المدخلة. يرجى التأكد من رقم السيارة.</div>
+        {% endif %}
+
+        {% if car %}
+            <h2>معلومات السيارة</h2>
+            <p>رقم السيارة: <strong>{{ car.car_number }}</strong></p>
+            <p>موديل السيارة: <strong>{{ car.car_model }}</strong></p>
+            <p>لون السيارة: <strong>{{ car.car_color }}</strong></p>
+
+            <h3>تواريخ الحجوزات المعتمدة:</h3>
+            <ul>
+                {% for booking in bookings %}
+                    <li>
+                        {% if booking.arrival_date %}
+                            تاريخ القدوم: <strong>{{ booking.arrival_date|date:"Y/m/d" }}</strong>
+                        {% else %}
+                            تاريخ القدوم غير محدد.
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li>لا توجد حجوزات معتمدة.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 CIMAK-CIMENTO. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
